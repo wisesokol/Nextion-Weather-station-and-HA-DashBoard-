@@ -1,0 +1,59 @@
+# ---------------------------------------------------    
+# Binary
+input_boolean:
+  notify_vent:
+    name: Ventilate
+    initial: off
+    icon: mdi:air-filter
+  notify_block:
+    name: Blocked
+    initial: off
+    icon: mdi:block-helper
+  allautomation:
+    name: GroupAllAutomation
+    initial: on
+    icon: mdi:block-helper
+  ptc_binary:
+    name: ptc_b
+    initial: on
+    icon: mdi:radiator
+  sleeperb:
+    initial: off
+# ---------------------------------------------------    
+  
+
+
+# For nextion Dim and sleep control
+input_text:
+  # sleep:
+  #   initial: 0
+  dim:
+    initial: 100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

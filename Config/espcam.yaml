@@ -1,0 +1,345 @@
+substitutions:
+  hostname: 'espcam'
+  ssid: 'Your SSID of wifi'
+  password: 'Your Pass of wifi'
+esphome:
+  name: $hostname
+  platform: ESP32
+  board: esp32dev
+wifi:
+  ssid: $ssid
+  password: $password
+  fast_connect: True
+  manual_ip:
+    static_ip: 192.168.1.33
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+api:
+
+ota:
+logger:
+  baud_rate: 0
+  level: VERBOSE
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 9600
+
+time:
+  - platform: homeassistant
+    id: esptime
+
+sensor:
+# today
+  - platform: homeassistant   # Outside temperature
+    id: out_Temp    
+    entity_id: sensor.outdoor_temperature
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   # templow today
+    id: temp_low_1
+    entity_id: sensor.temp_low_1     
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   # temp_max_today
+    id: temp_max_1
+    entity_id: sensor.temp_max_1     
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant    # скорость ветра
+    id: wind_speed
+    entity_id: sensor.weatherbit_wind_speed  
+# ---------------------------------------------------------------------------------  
+  - platform: homeassistant   # weather icon
+    id: weather_icon
+    entity_id: sensor.today_icon
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   # вероятность осадков
+    id: precip_prob
+    entity_id: sensor.precip_prob
+# --------------------------------------------------------------------------------- 
+
+# 2d
+  - platform: homeassistant   
+    id: d2_icon
+    entity_id: sensor.d2_icon
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   
+    id: d2_tmin
+    entity_id: sensor.d2_tmin
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   
+    id: d2_tmax
+    entity_id: sensor.d2_tmax
+# --------------------------------------------------------------------------------- 
+
+# 3d
+  - platform: homeassistant   
+    id: d3_icon
+    entity_id: sensor.d3_icon
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   
+    id: d3_tmin
+    entity_id: sensor.d3_tmin
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   
+    id: d3_tmax
+    entity_id: sensor.d3_tmax
+# --------------------------------------------------------------------------------- 
+
+# 4d
+  - platform: homeassistant   
+    id: d4_icon
+    entity_id: sensor.d4_icon
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   
+    id: d4_tmin
+    entity_id: sensor.d4_tmin
+# --------------------------------------------------------------------------------- 
+  - platform: homeassistant   
+    id: d4_tmax
+    entity_id: sensor.d4_tmax
+# --------------------------------------------------------------------------------- 
+
+# Sensors Your sensors from Home assistent, if you need
+  - platform: homeassistant   # humid
+    id: Humid
+    entity_id: sensor.bme280_humidity
+# ---------------------------------------------------------------------------------   
+  - platform: homeassistant   # co2
+    id: CO2
+    entity_id: sensor.xiaomi_airpurifier_air_quality_co2
+# ---------------------------------------------------------------------------------   
+  - platform: homeassistant   # Inside temperature
+    id: Ins_Temp
+    entity_id: sensor.bme280_temperature
+# --------------------------------------------------------------------------------- 
+
+
+  
+
+text_sensor:
+  - platform: homeassistant    # Brightess of nextion display. Setup from Node red.
+    id: dim
+    entity_id: input_text.dim
+  - platform: homeassistant
+    id: day_simple
+    entity_id: sensor.day_simple
+  - platform: homeassistant
+    id: month_simple
+    entity_id: sensor.month_simple
+  - platform: homeassistant
+    id: mond_simple
+    entity_id: sensor.mond_simple
+  - platform: homeassistant   # Weather_discription(Cloudy)
+    id: discr1
+    entity_id: sensor.weatherbit_description
+  - platform: homeassistant           # Control of PTC heat (Xiaomi smartmi fresh air XFXTDFR02ZM)
+    id: PTC_button_txt
+    entity_id: input_boolean.ptc_binary
+    on_value:
+       then:
+         - if:
+            condition:
+              lambda: 'return (id(PTC_button_txt).state == "on");'
+            then:
+              - lambda: |-
+                          id(glob_PTC_button) = "1";
+                          id(teplomer).send_command_no_ack("PTC_button.val=1");
+            else:
+              - lambda: |-
+                          id(glob_PTC_button) = "0";
+                          id(teplomer).send_command_no_ack("PTC_button.val=0");
+
+  - platform: homeassistant
+    id: Airfresh_state_txt
+    entity_id: fan.xiaomi_miio_device
+    on_value:
+       then:
+         - if:
+            condition:
+              lambda: 'return (id(Airfresh_state_txt).state == "on");'
+            then:
+              - lambda: |-
+                          id(glob_Airfresh_state) = "1";
+                          id(teplomer).send_command_no_ack("Airfresh_state.val=1");
+            else:
+              - lambda: |-
+                          id(glob_Airfresh_state) = "0";
+                          id(teplomer).send_command_no_ack("Airfresh_state.val=0");
+
+  - platform: homeassistant
+    id: Vent_txt
+    entity_id: input_boolean.notify_vent
+    on_value:
+       then:
+         - if:
+            condition:
+              lambda: 'return (id(Vent_txt).state == "on");'
+            then:
+              - lambda: |-
+                          id(glob_Vent) = "1";
+                          id(teplomer).send_command_no_ack("Vent.val=1");
+            else:
+              - lambda: |-
+                          id(glob_Vent) = "0";
+                          id(teplomer).send_command_no_ack("Vent.val=0");
+
+  - platform: homeassistant
+    id: Auto_txt
+    entity_id: input_boolean.allautomation
+    on_value:
+       then:
+         - if:
+            condition:
+              lambda: 'return (id(Auto_txt).state == "on");'
+            then:
+              - lambda: |-
+                          id(glob_Auto) = "1";
+                          id(teplomer).send_command_no_ack("Auto.val=1");
+            else:
+              - lambda: |-
+                          id(glob_Auto) = "0";
+                          id(teplomer).send_command_no_ack("Auto.val=0");
+
+binary_sensor:
+
+  - platform: nextion
+    page_id: 0
+    component_id: 23
+    id: Airfresh_state
+    on_press:
+      then:
+        - homeassistant.service:
+            service: fan.turn_on
+            data:
+              entity_id: fan.xiaomi_miio_device
+    on_release:
+      then:
+        - homeassistant.service:
+            service: fan.turn_off
+            data:
+              entity_id: fan.xiaomi_miio_device
+  
+  - platform: nextion          # Обрабатывание нажатия кнопки на NExtion.
+    page_id: 0                # Прописываем что будет отправляться в HA
+    component_id: 19          # ID кнопки в Nextion
+    id: PTC_button
+    on_press:
+      then:
+        - homeassistant.service:
+            service: input_boolean.turn_on
+            data:
+              entity_id: input_boolean.ptc_binary
+    on_release:
+      then:
+        - homeassistant.service:
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.ptc_binary
+              
+  - platform: nextion          # Обрабатывание нажатия кнопки на NExtion.
+    page_id: 0                # Прописываем что будет отправляться в HA
+    component_id: 24          # ID кнопки в Nextion
+    id: Vent
+    on_press:
+      then:
+        - homeassistant.service:
+            service: input_boolean.turn_on
+            data:
+              entity_id: input_boolean.notify_vent
+    on_release:
+      then:
+        - homeassistant.service:
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.notify_vent
+
+  - platform: nextion          # Обрабатывание нажатия кнопки на NExtion.
+    page_id: 0                # Прописываем что будет отправляться в HA
+    component_id: 25          # ID кнопки в Nextion
+    id: Auto
+    on_press:
+      then:
+        - homeassistant.service:
+            service: input_boolean.turn_on
+            data:
+              entity_id: input_boolean.allautomation
+    on_release:
+      then:
+        - homeassistant.service:
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.allautomation
+  
+  - platform: homeassistant          # Обрабатывание нажатия кнопки на NExtion.
+    id: sleeperb
+    entity_id: input_boolean.sleeperb
+    on_press:
+      then:
+        - delay: 5s
+        - homeassistant.service:
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.sleeperb   
+      
+        
+    
+
+
+
+globals:
+ - id: first_page             # First page of the display?
+   type: bool
+   restore_value: no
+
+ - id: display_on             # Is display on?
+   type: bool
+   restore_value: no
+
+ - id: glob_PTC_button
+   type: std::string
+
+ - id: glob_Airfresh_state
+   type: std::string
+
+ - id: glob_Vent
+   type: std::string
+
+ - id: glob_Auto
+   type: std::string
+
+   
+display:
+  - platform: nextion        # Send data from esp to uart of Nextion.
+    id: teplomer
+    update_interval: 5s
+    lambda: |-
+             it.set_wait_for_ack(false);
+                auto time = id(esptime).now();
+                it.set_component_text_printf("hour","%02d",time.hour);
+                it.set_component_text_printf("minute","%02d",time.minute);
+                it.set_component_text_printf("day",id(day_simple).state.c_str());
+                it.set_component_text_printf("month",id(month_simple).state.c_str());
+                it.set_component_text_printf("mond",id(mond_simple).state.c_str());
+                it.set_component_text_printf("out_temp","%.0f",id(out_Temp).state);
+                it.set_component_text_printf("temp_low_1","%.1f",id(temp_low_1).state);
+                it.set_component_text_printf("temp_max_1","%.1f",id(temp_max_1).state);
+                it.send_command_printf("%s.pic=%.0f", "weather_icon",id(weather_icon).state);
+                it.set_component_text_printf("precip_prob","%.0f",id(precip_prob).state);
+                it.set_component_text_printf("d2_tmin","%.1f",id(d2_tmin).state);
+                it.set_component_text_printf("d2_tmax","%.1f",id(d2_tmax).state);
+                it.send_command_printf("%s.pic=%.0f", "d2_icon",id(d2_icon).state);
+                it.set_component_text_printf("d3_tmin","%.1f",id(d3_tmin).state);
+                it.set_component_text_printf("d3_tmax","%.1f",id(d3_tmax).state);
+                it.send_command_printf("%s.pic=%.0f", "d3_icon",id(d2_icon).state);
+                it.set_component_text_printf("d4_tmin","%.1f",id(d4_tmin).state);
+                it.set_component_text_printf("d4_tmax","%.1f",id(d4_tmax).state);
+                it.send_command_printf("%s.pic=%.0f", "d4_icon",id(d4_icon).state);
+                it.set_component_text_printf("discr1",id(discr1).state.c_str());
+                it.send_command_printf("PTC_button.val=%s", id(glob_PTC_button).c_str());
+                it.send_command_printf("Airfresh_state.val=%s", id(glob_Airfresh_state).c_str());
+                it.send_command_printf("Vent.val=%s", id(glob_Vent).c_str());
+                it.send_command_printf("Auto.val=%s", id(glob_Auto).c_str());
+                it.send_command_printf("dim=%s",id(dim).state.c_str());
+                if (id(sleeperb).state) {
+                  it.send_command_printf("sleep=1");
+                }

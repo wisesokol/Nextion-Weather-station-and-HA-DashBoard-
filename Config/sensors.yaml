@@ -1,0 +1,654 @@
+  - platform: template
+    sensors:
+      outdoor_temperature:
+        value_template: '{{ states.weather.home.attributes.temperature }}'
+        device_class: temperature
+
+# Nextion        
+        
+
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+# date      
+  - platform: template
+    sensors:
+     day_simple:
+       entity_id: sensor.date
+       icon_template: mdi:calendar-today
+       value_template: >
+         {{ now().day | string }} 
+  - platform: template
+    sensors:
+     month_simple:
+       entity_id: sensor.date
+       icon_template: mdi:calendar-today
+       value_template: >
+         {% set months = ["Янв", "Февр", "Март", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Нояб", "Дек"] %}
+         {{ months[now().month-1] }}    
+  - platform: template
+    sensors:
+     mond_simple:
+       entity_id: sensor.date
+       icon_template: mdi:calendar-today
+       value_template: >
+         {% set days = ["Понед", "Вторн", "Среда", "Четв", "Пятн", "Суб", "Воскр"]  %}
+         {{ days[now().weekday()] }}    
+
+
+
+# forecast          {% set days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"]  %}
+# 1d
+  - platform: template            # Convert data (name of weather icon from Weatherbit) from HA. https://github.com/briis/weatherbit
+    sensors:
+      today_icon:
+       value_template: >-
+           {% if is_state("sensor.weatherbit_icon_code", 'a01d') %}
+             0
+           {% elif is_state("sensor.weatherbit_icon_code", 'a01n') %}
+             1
+           {% elif is_state("sensor.weatherbit_icon_code", 'a02d') %}
+             2
+           {% elif is_state("sensor.weatherbit_icon_code", 'a02n') %}
+             3
+           {% elif is_state("sensor.weatherbit_icon_code", 'a03d') %}
+             4
+           {% elif is_state("sensor.weatherbit_icon_code", 'a03n') %}
+             5
+           {% elif is_state("sensor.weatherbit_icon_code", 'a04d') %}
+             6
+           {% elif is_state("sensor.weatherbit_icon_code", 'a04n') %}
+             7
+           {% elif is_state("sensor.weatherbit_icon_code", 'a05d') %}
+             8
+           {% elif is_state("sensor.weatherbit_icon_code", 'a05n') %}
+             9
+           {% elif is_state("sensor.weatherbit_icon_code", 'a06d') %}
+             10
+           {% elif is_state("sensor.weatherbit_icon_code", 'a06n') %}
+             11
+           {% elif is_state("sensor.weatherbit_icon_code", 'c01d') %}
+             12
+           {% elif is_state("sensor.weatherbit_icon_code", 'c01n') %}
+             13
+           {% elif is_state("sensor.weatherbit_icon_code", 'c02d') %}
+             14
+           {% elif is_state("sensor.weatherbit_icon_code", 'c02n') %}
+             15
+           {% elif is_state("sensor.weatherbit_icon_code", 'c03d') %}
+             16
+           {% elif is_state("sensor.weatherbit_icon_code", 'c03n') %}
+             17
+           {% elif is_state("sensor.weatherbit_icon_code", 'c04d') %}
+             18
+           {% elif is_state("sensor.weatherbit_icon_code", 'c04n') %}
+             19
+           {% elif is_state("sensor.weatherbit_icon_code", 'd01d') %}
+             20
+           {% elif is_state("sensor.weatherbit_icon_code", 'd01n') %}
+             21
+           {% elif is_state("sensor.weatherbit_icon_code", 'd02d') %}
+             22
+           {% elif is_state("sensor.weatherbit_icon_code", 'd02n') %}
+             23
+           {% elif is_state("sensor.weatherbit_icon_code", 'd03d') %}
+             24
+           {% elif is_state("sensor.weatherbit_icon_code", 'd03n') %}
+             25
+           {% elif is_state("sensor.weatherbit_icon_code", 'f01d') %}
+             26
+           {% elif is_state("sensor.weatherbit_icon_code", 'f01n') %}
+             27
+           {% elif is_state("sensor.weatherbit_icon_code", 'r01d') %}
+             28
+           {% elif is_state("sensor.weatherbit_icon_code", 'r01n') %}
+             29
+           {% elif is_state("sensor.weatherbit_icon_code", 'r02d') %}
+             30
+           {% elif is_state("sensor.weatherbit_icon_code", 'r02n') %}
+             31
+           {% elif is_state("sensor.weatherbit_icon_code", 'r03d') %}
+             32
+           {% elif is_state("sensor.weatherbit_icon_code", 'r03n') %}
+             33
+           {% elif is_state("sensor.weatherbit_icon_code", 'r04d') %}
+             34
+           {% elif is_state("sensor.weatherbit_icon_code", 'r04n') %}
+             35
+           {% elif is_state("sensor.weatherbit_icon_code", 'r05d') %}
+             36
+           {% elif is_state("sensor.weatherbit_icon_code", 'r05n') %}
+             37
+           {% elif is_state("sensor.weatherbit_icon_code", 'r06d') %}
+             38
+           {% elif is_state("sensor.weatherbit_icon_code", 'r06n') %}
+             39
+           {% elif is_state("sensor.weatherbit_icon_code", 's01d') %}
+             40 
+           {% elif is_state("sensor.weatherbit_icon_code", 's01n') %}
+             41
+           {% elif is_state("sensor.weatherbit_icon_code", 's02d') %}
+             42
+           {% elif is_state("sensor.weatherbit_icon_code", 's02n') %}
+             43
+           {% elif is_state("sensor.weatherbit_icon_code", 's03d') %}
+             44
+           {% elif is_state("sensor.weatherbit_icon_code", 's03n') %}
+             45
+           {% elif is_state("sensor.weatherbit_icon_code", 's04d') %}
+             46
+           {% elif is_state("sensor.weatherbit_icon_code", 's04n') %}
+             47
+           {% elif is_state("sensor.weatherbit_icon_code", 's05d') %}
+             48
+           {% elif is_state("sensor.weatherbit_icon_code", 's05n') %}
+             49
+           {% elif is_state("sensor.weatherbit_icon_code", 's06d') %}
+             50
+           {% elif is_state("sensor.weatherbit_icon_code", 's06n') %}
+             51
+           {% elif is_state("sensor.weatherbit_icon_code", 't01d') %}
+             52
+           {% elif is_state("sensor.weatherbit_icon_code", 't01n') %}
+             53
+           {% elif is_state("sensor.weatherbit_icon_code", 't02d') %}
+             54
+           {% elif is_state("sensor.weatherbit_icon_code", 't02n') %}
+             55
+           {% elif is_state("sensor.weatherbit_icon_code", 't03d') %}
+             56
+           {% elif is_state("sensor.weatherbit_icon_code", 't03n') %}
+             57
+           {% elif is_state("sensor.weatherbit_icon_code", 't04d') %}
+             58
+           {% elif is_state("sensor.weatherbit_icon_code", 't04n') %}
+             59
+           {% elif is_state("sensor.weatherbit_icon_code", 't05d') %}
+             60 
+           {% elif is_state("sensor.weatherbit_icon_code", 't05n') %}
+             61
+           {% elif is_state("sensor.weatherbit_icon_code", 'u00d') %}
+             62
+           {% elif is_state("sensor.weatherbit_icon_code", 'u00n') %}
+             63             
+           {% else %}
+             13
+           {% endif %}
+ 
+  - platform: template
+    sensors:
+      temp_low_1:
+        value_template: '{{ states.sensor.weatherbit_forecast_day_1.attributes.templow }}'
+
+  - platform: template
+    sensors:
+      temp_max_1:
+        value_template: '{{ states.sensor.weatherbit_forecast_day_1.attributes.temperature }}'
+        
+  - platform: template
+    sensors:
+      precip_prob:
+        value_template: '{{ states.sensor.weatherbit_forecast_day_1.attributes.precip_prob }}'        
+
+# 2d        
+  - platform: template
+    sensors:
+      d2_tmin:
+        value_template: '{{ states.sensor.weatherbit_forecast_day_2.attributes.templow }}'
+             
+  - platform: template
+    sensors:
+       d2_tmax:
+         value_template: '{{ states.sensor.weatherbit_forecast_day_2.attributes.temperature }}'
+
+  - platform: template
+    sensors:
+      d2_icon:
+       value_template: >-
+           {% if states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a01d' %}
+             65
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a01n' %}
+             66
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a02d' %}
+             67
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a02n' %}
+             68
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a03d' %}
+             69
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a03n' %}
+             70
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a04d' %}
+             71
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a04n' %}
+             72
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a05d' %}
+             73
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a05n' %}
+             74
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a06d' %}
+             75
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'a06n' %}
+             76
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c01d' %}
+             77
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c01n' %}
+             78
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c02d' %}
+             79
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c02n' %}
+             80
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c03d' %}
+             81
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c03n' %}
+             82
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c04d' %}
+             83
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'c04n' %}
+             84
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'd01d' %}
+             85
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'd01n' %}
+             86
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'd02d' %}
+             87
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'd02n' %}
+             88
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'd03d' %}
+             89
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'd03n' %}
+             90
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'f01d' %}
+             91
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'f01n' %}
+             92
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r01d' %}
+             93
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r01n' %}
+             94
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r02d' %}
+             95
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r02n' %}
+             96
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r03d' %}
+             97
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r03n' %}
+             98
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r04d' %}
+             99
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r04n' %}
+             100
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r05d' %}
+             101
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r05n' %}
+             102
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r06d' %}
+             103
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'r06n' %}
+             104
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's01d' %}
+             105 
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's01n' %}
+             106
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's02d' %}
+             107
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's02n' %}
+             108
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's03d' %}
+             109
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's03n' %}
+             110
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's04d' %}
+             111
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's04n' %}
+             112
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's05d' %}
+             113
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's05n' %}
+             114
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's06d' %}
+             115
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 's06n' %}
+             116
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't01d' %}
+             117
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't01n' %}
+             118
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't02d' %}
+             119
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't02n' %}
+             120
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't03d' %}
+             121
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't03n' %}
+             122
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't04d' %}
+             123
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't04n' %}
+             124
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't05d' %}
+             125 
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 't05n' %}
+             126
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'u00d' %}
+             127
+           {% elif states.sensor.weatherbit_forecast_day_2.attributes.weather_icon == 'u00n' %}
+             128             
+           {% else %}
+             78
+           {% endif %}         
+        
+# 3d        
+  - platform: template
+    sensors:
+      d3_tmin:
+        value_template: '{{ states.sensor.weatherbit_forecast_day_3.attributes.templow }}'
+             
+               
+  - platform: template
+    sensors:
+       d3_tmax:
+         value_template: '{{ states.sensor.weatherbit_forecast_day_3.attributes.temperature }}'
+
+  - platform: template
+    sensors:
+      d3_icon:
+       value_template: >-
+           {% if states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a01d' %}
+             65
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a01n' %}
+             66
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a02d' %}
+             67
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a02n' %}
+             68
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a03d' %}
+             69
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a03n' %}
+             70
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a04d' %}
+             71
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a04n' %}
+             72
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a05d' %}
+             73
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a05n' %}
+             74
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a06d' %}
+             75
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'a06n' %}
+             76
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c01d' %}
+             77
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c01n' %}
+             78
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c02d' %}
+             79
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c02n' %}
+             80
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c03d' %}
+             81
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c03n' %}
+             82
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c04d' %}
+             83
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'c04n' %}
+             84
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'd01d' %}
+             85
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'd01n' %}
+             86
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'd02d' %}
+             87
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'd02n' %}
+             88
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'd03d' %}
+             89
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'd03n' %}
+             90
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'f01d' %}
+             91
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'f01n' %}
+             92
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r01d' %}
+             93
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r01n' %}
+             94
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r02d' %}
+             95
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r02n' %}
+             96
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r03d' %}
+             97
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r03n' %}
+             98
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r04d' %}
+             99
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r04n' %}
+             100
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r05d' %}
+             101
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r05n' %}
+             102
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r06d' %}
+             103
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'r06n' %}
+             104
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's01d' %}
+             105 
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's01n' %}
+             106
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's02d' %}
+             107
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's02n' %}
+             108
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's03d' %}
+             109
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's03n' %}
+             110
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's04d' %}
+             111
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's04n' %}
+             112
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's05d' %}
+             113
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's05n' %}
+             114
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's06d' %}
+             115
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 's06n' %}
+             116
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't01d' %}
+             117
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't01n' %}
+             118
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't02d' %}
+             119
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't02n' %}
+             120
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't03d' %}
+             121
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't03n' %}
+             122
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't04d' %}
+             123
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't04n' %}
+             124
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't05d' %}
+             125 
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 't05n' %}
+             126
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'u00d' %}
+             127
+           {% elif states.sensor.weatherbit_forecast_day_3.attributes.weather_icon == 'u00n' %}
+             128             
+           {% else %}
+             78
+           {% endif %}                
+        
+# 4d        
+  - platform: template
+    sensors:
+      d4_tmin:
+        value_template: '{{ states.sensor.weatherbit_forecast_day_4.attributes.templow }}'
+             
+               
+  - platform: template
+    sensors:
+       d4_tmax:
+         value_template: '{{ states.sensor.weatherbit_forecast_day_4.attributes.temperature }}'
+
+  - platform: template
+    sensors:
+      d4_icon:
+       value_template: >-
+           {% if states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a01d' %}
+             65
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a01n' %}
+             66
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a02d' %}
+             67
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a02n' %}
+             68
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a03d' %}
+             69
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a03n' %}
+             70
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a04d' %}
+             71
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a04n' %}
+             72
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a05d' %}
+             73
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a05n' %}
+             74
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a06d' %}
+             75
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'a06n' %}
+             76
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c01d' %}
+             77
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c01n' %}
+             78
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c02d' %}
+             79
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c02n' %}
+             80
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c03d' %}
+             81
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c03n' %}
+             82
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c04d' %}
+             83
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'c04n' %}
+             84
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'd01d' %}
+             85
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'd01n' %}
+             86
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'd02d' %}
+             87
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'd02n' %}
+             88
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'd03d' %}
+             89
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'd03n' %}
+             90
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'f01d' %}
+             91
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'f01n' %}
+             92
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r01d' %}
+             93
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r01n' %}
+             94
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r02d' %}
+             95
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r02n' %}
+             96
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r03d' %}
+             97
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r03n' %}
+             98
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r04d' %}
+             99
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r04n' %}
+             100
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r05d' %}
+             101
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r05n' %}
+             102
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r06d' %}
+             103
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'r06n' %}
+             104
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's01d' %}
+             105 
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's01n' %}
+             106
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's02d' %}
+             107
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's02n' %}
+             108
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's03d' %}
+             109
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's03n' %}
+             110
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's04d' %}
+             111
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's04n' %}
+             112
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's05d' %}
+             113
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's05n' %}
+             114
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's06d' %}
+             115
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 's06n' %}
+             116
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't01d' %}
+             117
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't01n' %}
+             118
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't02d' %}
+             119
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't02n' %}
+             120
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't03d' %}
+             121
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't03n' %}
+             122
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't04d' %}
+             123
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't04n' %}
+             124
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't05d' %}
+             125 
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 't05n' %}
+             126
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'u00d' %}
+             127
+           {% elif states.sensor.weatherbit_forecast_day_4.attributes.weather_icon == 'u00n' %}
+             128             
+           {% else %}
+             78
+           {% endif %}                           
+        
+
+# -------------------------------------------------
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
