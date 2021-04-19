@@ -7,7 +7,7 @@ RX TX line between Nextion and ESP.
 
 ![](Photo/Outside.jpg)
 
-![](Photo/Outside1.jpg)
+![](Photo/Outside2.jpg)
 
 
 ![](Photo/Inside.jpg)
