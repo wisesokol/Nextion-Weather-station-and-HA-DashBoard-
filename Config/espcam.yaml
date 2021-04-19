@@ -19,7 +19,7 @@ api:
 ota:
 logger:
   baud_rate: 0
-  level: VERBOSE
+
 
 uart:
   rx_pin: GPIO3
@@ -99,25 +99,8 @@ sensor:
     entity_id: sensor.d4_tmax
 # --------------------------------------------------------------------------------- 
 
-# Sensors Your sensors from Home assistent, if you need
-  - platform: homeassistant   # humid
-    id: Humid
-    entity_id: sensor.bme280_humidity
-# ---------------------------------------------------------------------------------   
-  - platform: homeassistant   # co2
-    id: CO2
-    entity_id: sensor.xiaomi_airpurifier_air_quality_co2
-# ---------------------------------------------------------------------------------   
-  - platform: homeassistant   # Inside temperature
-    id: Ins_Temp
-    entity_id: sensor.bme280_temperature
-# --------------------------------------------------------------------------------- 
-
-
-  
-
 text_sensor:
-  - platform: homeassistant    # Brightess of nextion display. Setup from Node red.
+  - platform: homeassistant
     id: dim
     entity_id: input_text.dim
   - platform: homeassistant
@@ -132,7 +115,8 @@ text_sensor:
   - platform: homeassistant   # Weather_discription(Cloudy)
     id: discr1
     entity_id: sensor.weatherbit_description
-  - platform: homeassistant           # Control of PTC heat (Xiaomi smartmi fresh air XFXTDFR02ZM)
+ 
+  - platform: homeassistant
     id: PTC_button_txt
     entity_id: input_boolean.ptc_binary
     on_value:
@@ -143,11 +127,11 @@ text_sensor:
             then:
               - lambda: |-
                           id(glob_PTC_button) = "1";
-                          id(teplomer).send_command_no_ack("PTC_button.val=1");
+                          id(page1).send_command_no_ack("PTC_button.val=1");
             else:
               - lambda: |-
                           id(glob_PTC_button) = "0";
-                          id(teplomer).send_command_no_ack("PTC_button.val=0");
+                          id(page1).send_command_no_ack("PTC_button.val=0");    
 
   - platform: homeassistant
     id: Airfresh_state_txt
@@ -160,12 +144,12 @@ text_sensor:
             then:
               - lambda: |-
                           id(glob_Airfresh_state) = "1";
-                          id(teplomer).send_command_no_ack("Airfresh_state.val=1");
+                          id(page1).send_command_no_ack("Airfresh_state.val=1");
             else:
               - lambda: |-
                           id(glob_Airfresh_state) = "0";
-                          id(teplomer).send_command_no_ack("Airfresh_state.val=0");
-
+                          id(page1).send_command_no_ack("Airfresh_state.val=0");
+                          
   - platform: homeassistant
     id: Vent_txt
     entity_id: input_boolean.notify_vent
@@ -177,12 +161,12 @@ text_sensor:
             then:
               - lambda: |-
                           id(glob_Vent) = "1";
-                          id(teplomer).send_command_no_ack("Vent.val=1");
+                          id(page1).send_command_no_ack("Vent.val=1");
             else:
               - lambda: |-
                           id(glob_Vent) = "0";
-                          id(teplomer).send_command_no_ack("Vent.val=0");
-
+                          id(page1).send_command_no_ack("Vent.val=0");
+                          
   - platform: homeassistant
     id: Auto_txt
     entity_id: input_boolean.allautomation
@@ -194,17 +178,17 @@ text_sensor:
             then:
               - lambda: |-
                           id(glob_Auto) = "1";
-                          id(teplomer).send_command_no_ack("Auto.val=1");
+                          id(page1).send_command_no_ack("Auto.val=1");
             else:
               - lambda: |-
                           id(glob_Auto) = "0";
-                          id(teplomer).send_command_no_ack("Auto.val=0");
-
+                          id(page1).send_command_no_ack("Auto.val=0");
+                          
 binary_sensor:
-
+                         
   - platform: nextion
-    page_id: 0
-    component_id: 23
+    page_id: 1
+    component_id: 3
     id: Airfresh_state
     on_press:
       then:
@@ -218,10 +202,11 @@ binary_sensor:
             service: fan.turn_off
             data:
               entity_id: fan.xiaomi_miio_device
-  
+# ---------------------------------------------------------------------------------  
+
   - platform: nextion          # Обрабатывание нажатия кнопки на NExtion.
-    page_id: 0                # Прописываем что будет отправляться в HA
-    component_id: 19          # ID кнопки в Nextion
+    page_id: 1                # Прописываем что будет отправляться в HA
+    component_id: 1          # ID кнопки в Nextion
     id: PTC_button
     on_press:
       then:
@@ -235,10 +220,11 @@ binary_sensor:
             service: input_boolean.turn_off
             data:
               entity_id: input_boolean.ptc_binary
-              
+# ---------------------------------------------------------------------------------               
+
   - platform: nextion          # Обрабатывание нажатия кнопки на NExtion.
-    page_id: 0                # Прописываем что будет отправляться в HA
-    component_id: 24          # ID кнопки в Nextion
+    page_id: 1                # Прописываем что будет отправляться в HA
+    component_id: 2          # ID кнопки в Nextion
     id: Vent
     on_press:
       then:
@@ -252,10 +238,11 @@ binary_sensor:
             service: input_boolean.turn_off
             data:
               entity_id: input_boolean.notify_vent
+# ---------------------------------------------------------------------------------
 
   - platform: nextion          # Обрабатывание нажатия кнопки на NExtion.
-    page_id: 0                # Прописываем что будет отправляться в HA
-    component_id: 25          # ID кнопки в Nextion
+    page_id: 1                # Прописываем что будет отправляться в HA
+    component_id: 4          # ID кнопки в Nextion
     id: Auto
     on_press:
       then:
@@ -270,6 +257,8 @@ binary_sensor:
             data:
               entity_id: input_boolean.allautomation
   
+# ---------------------------------------------------------------------------------
+
   - platform: homeassistant          # Обрабатывание нажатия кнопки на NExtion.
     id: sleeperb
     entity_id: input_boolean.sleeperb
@@ -279,7 +268,18 @@ binary_sensor:
         - homeassistant.service:
             service: input_boolean.turn_off
             data:
-              entity_id: input_boolean.sleeperb   
+              entity_id: input_boolean.sleeperb 
+  
+  - platform: homeassistant          # Обрабатывание нажатия кнопки на NExtion.
+    id: wakerb
+    entity_id: input_boolean.wakerb
+    on_press:
+      then:
+        - delay: 5s
+        - homeassistant.service:
+            service: input_boolean.turn_off
+            data:
+              entity_id: input_boolean.wakerb   
       
         
     
@@ -309,9 +309,9 @@ globals:
 
    
 display:
-  - platform: nextion        # Send data from esp to uart of Nextion.
-    id: teplomer
-    update_interval: 5s
+  - platform: nextion
+    id: page
+    update_interval: 1s
     lambda: |-
              it.set_wait_for_ack(false);
                 auto time = id(esptime).now();
@@ -335,11 +335,19 @@ display:
                 it.set_component_text_printf("d4_tmax","%.1f",id(d4_tmax).state);
                 it.send_command_printf("%s.pic=%.0f", "d4_icon",id(d4_icon).state);
                 it.set_component_text_printf("discr1",id(discr1).state.c_str());
-                it.send_command_printf("PTC_button.val=%s", id(glob_PTC_button).c_str());
-                it.send_command_printf("Airfresh_state.val=%s", id(glob_Airfresh_state).c_str());
-                it.send_command_printf("Vent.val=%s", id(glob_Vent).c_str());
-                it.send_command_printf("Auto.val=%s", id(glob_Auto).c_str());
                 it.send_command_printf("dim=%s",id(dim).state.c_str());
                 if (id(sleeperb).state) {
                   it.send_command_printf("sleep=1");
                 }
+                if (id(wakerb).state) {
+                  it.send_command_printf("sleep=0");
+                }
+  - platform: nextion
+    id: page1
+    update_interval: 3s
+    lambda: |-
+             it.set_wait_for_ack(false);
+                it.send_command_printf("PTC_button.val=%s", id(glob_PTC_button).c_str());
+                it.send_command_printf("Airfresh_state.val=%s", id(glob_Airfresh_state).c_str());
+                it.send_command_printf("Vent.val=%s", id(glob_Vent).c_str());
+                it.send_command_printf("Auto.val=%s", id(glob_Auto).c_str());

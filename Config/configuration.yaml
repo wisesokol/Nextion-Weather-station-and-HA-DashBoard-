@@ -19,16 +19,19 @@ input_boolean:
     icon: mdi:radiator
   sleeperb:
     initial: off
+    name: sleep Nextion(1)
+  wakerb:
+    initial: off
+    name: wake up Nextion(0)
 # ---------------------------------------------------    
   
 
 
 # For nextion Dim and sleep control
 input_text:
-  # sleep:
-  #   initial: 0
   dim:
     initial: 100
+    name: dim_Nextion
 
 
 
